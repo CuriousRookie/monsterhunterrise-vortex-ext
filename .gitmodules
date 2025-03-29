@@ -1,0 +1,3 @@
+[submodule "tool/MonsterHunterRiseModding"]
+	path = tool/MonsterHunterRiseModding
+	url = https://github.com/mhvuze/MonsterHunterRiseModding.git

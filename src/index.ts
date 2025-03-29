@@ -12,7 +12,7 @@ const MHR_EXEC = 'MonsterHunterRise.exe';
 
 // PAK
 const MOD_NAME_PATTERN = /(?<modName>.+?)-\d+-.+/g;
-const RETOOL_PATH = path.join(__dirname, 'extract');
+const RETOOL_PATH = path.join(__dirname, 'tool');
 const RETOOL_EXE = 'REtool.exe';
 const FILE_HASH_LIST = 'mhrisePC.list';
 

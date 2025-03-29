@@ -6,8 +6,9 @@
     "repository": "",
     "scripts": {
         "webpack": "node ./node_modules/webpack/bin/webpack --config webpack.config.js --progress",
-        "copyassets": "copyfiles -u 1 ./assets/**/*.* ./dist",
-        "build": "npm run webpack && extractInfo && npm run copyassets",
+        "copyassets": "copyfiles -u 1 \"./assets/*.*\" \"./dist\"",
+        "copytool": "copyfiles -u 3 \"./tool/MonsterHunterRiseModding/files/mhrisePC.list\" \"./tool/MonsterHunterRiseModding/files/REtool.exe\" \"./dist/tool\"",
+        "build": "npm run webpack && extractInfo && npm run copyassets && npm run copytool",
         "bundle7z": "7z a -t7z monsterhunterrise.7z ./dist/**",
         "clean": "rm -r ./dist & rm *.7z",
         "copyplugin": "node copyplugin.js",
