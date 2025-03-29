@@ -54,9 +54,9 @@ const tools = [
         ],
     },
     {
-        id: 'FluffyManager5000',
-        name: 'Fluffy Manager 5000',
-        logo: 'FluffyManager5000.jpg',
+        id: 'FluffyModManager',
+        name: 'Fluffy Mod Manager',
+        logo: 'FluffyModManager.jpg',
         executable: () => FLUFFY_MANAGER_EXEC,
         requiredFiles: [
             FLUFFY_MANAGER_EXEC,
@@ -124,9 +124,6 @@ function isMHR(gameId: string): boolean {
 
 function findFluffyModPath(api: types.IExtensionApi): string {
     const storedFluffyPath = findFluffyPath(api);
-    if (storedFluffyPath === '') {
-        throw new Error('fluffy path not found');
-    }
     return path.join(storedFluffyPath, ...FLUFFY_MOD_PATH);
 }
 
@@ -144,21 +141,24 @@ async function prepareForModding(api: types.IExtensionApi, discovery: types.IDis
     const firstNatives = [
         path.join(discovery.path, DIR_REFRAMEWORK, DIR_PLUGIN, FIRST_NATIVES_DLL_FILE)
     ];
-    await checkRequirement(api, 'First-Natives', '848', firstNatives);
+    await checkRequirement(api, 'First-Natives', '', '848', firstNatives);
 
     const reframeworkD2D = [
         path.join(discovery.path, DIR_REFRAMEWORK, DIR_PLUGIN, REFRAMEWORK_D2D_DLL_FILE),
         path.join(discovery.path, DIR_REFRAMEWORK, DIR_SCRIPT, REFRAMEWORK_D2D_LUA_FILE),
     ];
-    await checkRequirement(api, 'Reframework-Direct2D', '134', reframeworkD2D);
+    await checkRequirement(api, 'Reframework-Direct2D', '', '134', reframeworkD2D);
 
     const reframework = [
         path.join(discovery.path, REFRAMEWORK_DLL_FILE)
     ];
-    await checkRequirement(api, 'Reframework', '26', reframework);
+    await checkRequirement(api, 'Reframework', 'https://www.nexusmods.com/monsterhunterwilds/mods/93', '26', reframework);
 }
 
-async function checkRequirement(api: types.IExtensionApi, name: string, id: string, files: string[]): Promise<void | any[]> {
+async function checkRequirement(api: types.IExtensionApi, name: string, url: string, id: string, files: string[]): Promise<void | any[]> {
+    if (url === '') {
+        url = `https://www.nexusmods.com/monsterhunterrise/mods/${id}`;
+    }
     return Promise.all(files.map(file => fs.statAsync(file)))
         .catch(() => {
             api.showDialog('question', `${name} required`, {
@@ -169,7 +169,7 @@ async function checkRequirement(api: types.IExtensionApi, name: string, id: stri
                 { label: 'Skip Download' },
                 {
                     label: `Download ${name}`,
-                    action: () => util.opn(`https://www.nexusmods.com/monsterhunterrise/mods/${id}`).catch(() => undefined),
+                    action: () => util.opn(url).catch(() => undefined),
                 },
             ]);
         });
@@ -184,18 +184,18 @@ async function checkFluffyRequirement(api: types.IExtensionApi): Promise<string>
         fluffyPath = storedFluffyPath;
     } else {
         // hard link require fluffy manager installed on the same drive as game
-        await api.showDialog('question', 'Fluffy Manager 5000 required', {
-            text: 'Monster Hunter Rise requires Fluffy Manager 5000 for some mods to install correctly.\n'
-                + 'Before select your Fluffy Manager 5000 folder, you can first download it from nexusmod.',
+        await api.showDialog('question', 'Fluffy Mod Manager required', {
+            text: 'Monster Hunter Rise requires Fluffy Mod Manager for some mods to install correctly.\n'
+                + 'Before select your Fluffy Mod Manager folder, you can first download it from nexusmod.',
         }, [
             { label: 'Skip Download And Select' },
             {
-                label: `Download Fluffy Manager 5000 And Select`,
-                action: () => util.opn(`https://www.nexusmods.com/monsterhunterrise/mods/7`).catch(() => undefined),
+                label: `Download Fluffy Mod Manager And Select`,
+                action: () => util.opn(`https://www.nexusmods.com/site/mods/818`).catch(() => undefined),
             },
         ]);
 
-        fluffyPath = await api.selectDir({ title: 'Select Fluffy Manager 5000 folder' });
+        fluffyPath = await api.selectDir({ title: 'Select Fluffy Mod Manager folder' });
         await fs.statAsync(path.join(fluffyPath, FLUFFY_MANAGER_EXEC));
         api.store.dispatch(setFluffyPath(fluffyPath));
     }
